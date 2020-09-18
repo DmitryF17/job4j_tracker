@@ -46,7 +46,7 @@ public class SqlTracker implements Store {
 
     @Override
     public Item add(Item item) {
-        try (PreparedStatement st = cn.prepareStatement("insert into  item (name)  values  (?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement st = cn.prepareStatement("insert into  items (name)  values  (?)", Statement.RETURN_GENERATED_KEYS)) {
             st.setString(1, item.getName());
             st.executeUpdate();
             try (ResultSet generatedKeys = st.getGeneratedKeys()) {
@@ -65,7 +65,7 @@ public class SqlTracker implements Store {
     @Override
     public boolean replace(String id, Item item) {
         int whenreplaced = 0;
-        try (PreparedStatement st = cn.prepareStatement("update item set name = ? where id = ?")) {
+        try (PreparedStatement st = cn.prepareStatement("update items set name = ? where id = ?")) {
             st.setString(1, item.getName());
             st.setInt(2, Integer.parseInt(id));
             st.executeUpdate();
@@ -79,7 +79,7 @@ public class SqlTracker implements Store {
     @Override
     public boolean delete(String id) {
         int whendelete = 0;
-        try (PreparedStatement st = cn.prepareStatement("delete from item where id = ?")) {
+        try (PreparedStatement st = cn.prepareStatement("delete from items where id = ?")) {
             st.setInt(1, Integer.parseInt(id));
             st.executeUpdate();
             whendelete++;
@@ -92,7 +92,7 @@ public class SqlTracker implements Store {
     @Override
     public List<Item> findAll() {
         List<Item> res = new ArrayList<>();
-        try (PreparedStatement st = cn.prepareStatement("select * from item order by id")) {
+        try (PreparedStatement st = cn.prepareStatement("select * from items order by id")) {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Item item = new Item(rs.getString("name"));
@@ -108,7 +108,7 @@ public class SqlTracker implements Store {
     @Override
     public List<Item> findByName(String name) {
         List<Item> res = new ArrayList<>();
-        try (PreparedStatement st = cn.prepareStatement("select * from item where name = ?")) {
+        try (PreparedStatement st = cn.prepareStatement("select * from items where name = ?")) {
             st.setString(1, name);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -125,7 +125,7 @@ public class SqlTracker implements Store {
     @Override
     public Item findById(String id) {
         Item item = null;
-        try (PreparedStatement st = cn.prepareStatement("select * from item where id = ?")) {
+        try (PreparedStatement st = cn.prepareStatement("select * from items where id = ?")) {
             st.setInt(1, Integer.parseInt(id));
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
